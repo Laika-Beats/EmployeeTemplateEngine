@@ -13,7 +13,8 @@ const render = require("./lib/htmlRenderer");
 let EmployeeTeam = []
 
 function addEmployee () {
-    inquirer.prompt (
+    inquirer.prompt 
+    (
         [
             {
                 type: "input",
@@ -50,7 +51,80 @@ function addEmployee () {
                     },
                 ]
             }
-
         ]
-    )
+    ).then( (answers) => {
+        if (answers.employeeTitle === 0) {
+            inquirer.prompt
+            (
+                [
+                    {
+                        type: "input",
+                        message: "What is the office number?",
+                        name: "officeNum"
+                    },
+                    {
+                        type: "list",
+                        message: "Would you like to add another employee to the team?",
+                        name: "newEmployee",
+                        choices:
+                        [
+                            {
+                                name: "Yes",
+                                value: 0
+                            },
+                            {
+                                name: "No",
+                                value: 1
+                            }
+                        ]
+                    }
+                ]
+            ).then ( (answers) => {
+                let manager = new Manager (answers.name, answers.id, answers.email, answer.officeNum)
+                EmployeeTeam.push (manager)
+                if (answers.newEmployee === 0) {
+                    console.log ("Adding new employee...")
+                    addEmployee ()
+                } else {
+                    render (EmployeeTeam)
+                    fs.writeFile ("team.html", render (EmployeeTeam), err => {
+                        if (err) {
+                            console.log ("Error!")
+                        } else {
+                            console.log("Sucuess!")
+                        }
+                    })
+                }
+            })
+        }
+        if (answers.employeeType === 1) {
+            inquirer.prompt (
+                [
+                    {
+                        type: "input",
+                        message: "What is the Github username for this employee?",
+                        name: "github"
+                    },
+                    {
+                        type: "list",
+                        message: "Would you like to add another employee to the team?",
+                        name: "newEmployee",
+                        choices:
+                        [
+                            {
+                                name: "Yes",
+                                value: 0
+                            },
+                            {
+                                name: "No",
+                                value: 1
+                            }
+                        ]
+                    }
+
+                ]
+            ).then ( (answers))
+        }
+        
+    })
 }
