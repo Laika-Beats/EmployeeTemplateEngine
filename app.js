@@ -17,21 +17,6 @@ function addEmployee () {
     (
         [
             {
-                type: "input",
-                message: "What is the employee's full name?",
-                name: "name"
-            },
-            {
-                type: "input",
-                message: "What is the employee's ID number?",
-                name: "id"
-            },
-            {
-                type: "input",
-                message: "What is the e-mail address for this employee?",
-                name: "email"
-            },
-            {
                 type: "list",
                 message: "Choose a title for this employee:",
                 name: "employeeTitle",
@@ -59,6 +44,21 @@ function addEmployee () {
                 [
                     {
                         type: "input",
+                        message: "What is the employee's full name?",
+                        name: "name"
+                    },
+                    {
+                        type: "input",
+                        message: "What is the employee's ID number?",
+                        name: "id"
+                    },
+                    {
+                        type: "input",
+                        message: "What is the e-mail address for this employee?",
+                        name: "email"
+                    },
+                    {
+                        type: "input",
                         message: "What is the office number?",
                         name: "officeNum"
                     },
@@ -80,7 +80,7 @@ function addEmployee () {
                     }
                 ]
             ).then ( (answers) => {
-                let manager = new Manager (answers.name, answers.id, answers.email, answer.officeNum)
+                let manager = new Manager (answers.name, answers.id, answers.email, answers.officeNum)
                 EmployeeTeam.push (manager)
                 if (answers.newEmployee === 0) {
                     console.log ("Adding new employee...")
@@ -91,15 +91,30 @@ function addEmployee () {
                         if (err) {
                             console.log ("Error!")
                         } else {
-                            console.log("Sucuess!")
+                            console.log("Employee team generated!")
                         }
                     })
                 }
             })
         }
-        if (answers.employeeType === 1) {
+        if (answers.employeeTitle === 1) {
             inquirer.prompt (
                 [
+                    {
+                        type: "input",
+                        message: "What is the employee's full name?",
+                        name: "name"
+                    },
+                    {
+                        type: "input",
+                        message: "What is the employee's ID number?",
+                        name: "id"
+                    },
+                    {
+                        type: "input",
+                        message: "What is the e-mail address for this employee?",
+                        name: "email"
+                    },
                     {
                         type: "input",
                         message: "What is the Github username for this employee?",
@@ -123,8 +138,83 @@ function addEmployee () {
                     }
 
                 ]
-            ).then ( (answers))
+            ).then ( (answers) => {
+                let newEngineer = new Engineer (answers.name, answers.id, answers.email, answers.github)
+                EmployeeTeam.push (newEngineer)
+                if (answers.newEmployee === 0) {
+                    console.log ("Adding new employee..")
+                    addEmployee()
+                } else {
+                    render(EmployeeTeam)
+                    fs.writeFile ("team.html", render (EmployeeTeam), err => {
+                        if (err) {
+                            console.log ("Error!")
+                        } else {
+                            console.log ("Employee team generated!")
+                        }
+                    })
+                }
+            })
         }
-        
+        if (answers.employeeTitle === 2) {
+            inquirer.prompt (
+                [
+                    {
+                        type: "input",
+                        message: "What is the employee's full name?",
+                        name: "name"
+                    },
+                    {
+                        type: "input",
+                        message: "What is the employee's ID number?",
+                        name: "id"
+                    },
+                    {
+                        type: "input",
+                        message: "What is the e-mail address for this employee?",
+                        name: "email"
+                    },
+                    {
+                        type: "input",
+                        message: "What school is the intern from? (Enter n/a if not in school.)",
+                        name: "school"
+                    },
+                    {
+                        type: "list",
+                        message: "Would you like to add another employee to the team?",
+                        name: "newEmployee",
+                        choices:
+                        [
+                            {
+                                name: "Yes",
+                                value: 0
+                            },
+                            {
+                                name: "No",
+                                value: 1
+                            }
+                        ]
+                    }
+
+                ]
+            ).then ( (answers) => {
+                let newIntern = new Intern (answers.name, answers.id, answers.email, answers.school)
+                EmployeeTeam.push(newIntern)
+                if (answers.newEmployee === 0) {
+                    console.log ("Adding new employee..")
+                    addEmployee()
+                } else {
+                    render(EmployeeTeam)
+                    fs.writeFile ("team.html", render (EmployeeTeam), err => {
+                        if (err) {
+                            console.log ("Error!")
+                        } else {
+                            console.log ("Employee team generated!")
+                        }
+                    })
+                }
+            })
+        }
     })
 }
+addEmployee()
